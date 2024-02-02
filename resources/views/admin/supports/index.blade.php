@@ -1,4 +1,15 @@
-<h1>Listagem dos Suportes</h1>
+
+@extends('admin.layouts.app')
+
+@section('title', 'Forum')
+
+@section('header')
+ @include('admin.supports.partials.header', compact('supports'))
+@endsection
+
+@section('content')
+
+
 
 
 
@@ -30,3 +41,4 @@
 <x-pagination :paginator="$supports"
                 :appends="$filters"
 />
+@endsection
