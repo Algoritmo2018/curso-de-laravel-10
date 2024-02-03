@@ -57,7 +57,8 @@ $filters = ['filter' => $request->get('filter', '')];
         $this->service->new(CreateSupportDTO::makeFromRequest($request));
 
 
-        return redirect()->route('supports.index');
+        return redirect()->route('supports.index')
+        ->with('message', 'Cadastrado com sucesso!');
     }
 
     public function edit(string $id)
@@ -81,7 +82,8 @@ $filters = ['filter' => $request->get('filter', '')];
             return back();
         }
 
-        return redirect()->route('supports.index');
+        return redirect()->route('supports.index')
+        ->with('message', 'Editado com sucesso!');
     }
 
     public function destroy(string $id)
