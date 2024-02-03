@@ -22,10 +22,12 @@ class StatusSupport extends Component
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string
-    {
+    { 
+        $color = 'blue';
+        $color = $this->status === 'C' ? 'green' : $color;
+        $color = $this->status === 'P' ? 'red' : $color;
+        $textStatus = getStatusSupport($this->status);
 
-        $class = 
-
-        return view('components.status-support');
+        return view('components.status-support', compact('textStatus', 'color'));
     }
 }

@@ -18,11 +18,10 @@
             @yield('header')
 
         <div>
+            <x-messages/>
             @yield('content')
         </div>
-        <footer>
-            #default footer
-        </footer>
+
     </section>
 </body>
 
