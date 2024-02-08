@@ -25,4 +25,11 @@ class ReplySupportService
     {
         return $this->repository->createNew($dto);
     }
+
+
+    public function delete(string $id): bool
+    {
+        return $this->repository->delete($id);
+    }
+
 }
