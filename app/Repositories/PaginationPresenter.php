@@ -2,20 +2,21 @@
 
 namespace App\Repositories;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use stdClass;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Repositories\Contracts\PaginationInterface;
 
 class PaginationPresenter implements PaginationInterface
 {
-/**
-* @var stdClass[]
-**/
+    /**
+     * @var stdClass[]
+     **/
     private array $items;
 
     public function __construct(
         protected LengthAwarePaginator $paginator,
     ) {
-      $this->items =  $this->resolveItems($this->paginator->items());
+        $this->items =  $this->resolveItems($this->paginator->items());
     }
 
     /**
@@ -52,16 +53,17 @@ class PaginationPresenter implements PaginationInterface
         return $this->paginator->currentPage() - 1;
     }
 
-    private function resolveItems(array $items): array{
+    private function resolveItems(array $items): array
+    {
 
-      $response = [];
+        $response = [];
         foreach ($items as $item) {
-$stdClassObject = new stdClass;
-foreach ($item->toArray() as $key => $value) {
-    $stdClassObject->{$key} = $value;
-}
-array_push( $response, $stdClassObject);
-      }
-      return $response;
+            $stdClassObject = new stdClass;
+            foreach ($item->toArray() as $key => $value) {
+                $stdClassObject->{$key} = $value;
+            }
+            array_push($response, $stdClassObject);
+        }
+        return $response;
     }
 }

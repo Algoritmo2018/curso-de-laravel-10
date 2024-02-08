@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Contracts;
 
 use App\DTO\Supports\{
     CreateSupportDTO,
     UpdateSupportDTO
-};
+}; 
+
 use stdClass;
 
 interface SupportRepositoryInterface

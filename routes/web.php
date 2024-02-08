@@ -1,10 +1,10 @@
 <?php
 
 use App\Enums\SupportStatus;
+use App\Http\Controllers\Admin\{ReplySupportController, SupportController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Site\SiteController;
-use App\Http\Controllers\Admin\{SupportController};
 
 
 
@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/supports/{id}/replies', [ReplySupportController::class, 'store'])->name('replies.store');
+    Route::get('/supports/{id}/replies', [ReplySupportController::class, 'index'])->name('replies.index');
+
 
 //Route::resource('/supports', SupportController::class);
     Route::delete('/supports/{id}', [SupportController::class, 'destroy'])->name('supports.destroy');
@@ -37,7 +40,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/supports/create', [SupportController::class, 'create'])->name('supports.create');
 
-    Route::get('/supports/{id}', [SupportController::class, 'show'])->name('supports.show');
+
 
     Route::post('/supports', [SupportController::class, 'store'])->name('supports.store');
     //Comando para definir um nome para rota
