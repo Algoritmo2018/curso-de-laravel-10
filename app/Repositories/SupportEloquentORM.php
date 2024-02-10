@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use stdClass;
 use App\Models\Support;
+use Illuminate\Support\Facades\Gate;
 use App\DTO\Supports\CreateSupportDTO;
 use App\DTO\Supports\UpdateSupportDTO;
 use App\Repositories\Contracts\PaginationInterface;
@@ -48,7 +49,7 @@ class SupportEloquentORM implements SupportRepositoryInterface
     }
     public function findOne(string $id): stdClass|null
     {
-        $support = $this->model
+        $support = $this->model->with('user')
             ->find($id);
         if (!$support) {
             return null;
@@ -57,7 +58,12 @@ class SupportEloquentORM implements SupportRepositoryInterface
     }
     public function delete(string $id): void
     {
-        $this->model->findOrFail($id)->delete();
+        $support =  $this->model->findOrFail($id);
+
+        if(Gate::denies('owner', $support->user->id)){
+            abort(403, 'Not Authorized');
+        }
+       $support->delete();
     }
     public function new(CreateSupportDTO $dto): stdClass
     {
@@ -72,6 +78,11 @@ class SupportEloquentORM implements SupportRepositoryInterface
         if (!$support = $this->model->find($dto->id)) {
             return null;
         }
+
+        if(Gate::denies('owner', $support->user->id)){
+            abort(403, 'Not Authorized');
+        }
+
         $support->update(
             (array) $dto
         );

@@ -3,11 +3,12 @@
 namespace App\Repositories\Eloquent;
 
 
+use stdClass;
 use App\DTO\Replies\CreateReplyDTO;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\ReplySupport as Model;
 use App\Repositories\Contracts\ReplyRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
-use stdClass;
 
 class ReplySupportRepository implements ReplyRepositoryInterface
 {
@@ -30,12 +31,13 @@ class ReplySupportRepository implements ReplyRepositoryInterface
 
     public function createNew(CreateReplyDTO $dto): stdClass
     {
-        $reply = $this->model->create([
+        $reply = $this->model->with('user')->create([
             'content' => $dto->content,
             'support_id' => $dto->supportId,
             'user_id' => Auth::user()->id,
         ]);
-
+        $reply = $reply->with('user')->first();
+ 
         return (object) $reply->toArray();
     }
 
@@ -45,6 +47,10 @@ class ReplySupportRepository implements ReplyRepositoryInterface
         if(!$reply = $this->model->find($id))
         {
             return false;
+        }
+
+        if(Gate::denies('owner', $reply->user->id)){
+            abort(403, 'Not Authorized');
         }
 
         return (bool) $reply->delete();
