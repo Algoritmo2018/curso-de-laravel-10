@@ -43,16 +43,17 @@
                                 </td>
                                 <td class="px-4 py-2 text-sm whitespace-nowrap">
                                     <div class="flex items-center">
+                                        @foreach ($support->replies as $reply)
+                                        @if($loop->index < 4)
+                                        <div class="w-7 h-7 text-center justify-content-center text-white rounded-full bg-green-500">{{ getInitials($reply['user']['name']) }}</div>
+                                        @endif
 
-                                        <div
-                                            class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full dark:border-gray-700 shrink-0 bg-green-500">
-                                        </div>
-
+                                        @endforeach
                                     </div>
                                 </td>
 
                                 <td class="px-4 py-2 text-sm whitespace-nowrap flex">
-                                  
+
                                     @can('owner', $support->user_id)
                                         <a href="{{ route('supports.edit', $support->id) }}"
                                             class="px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg">

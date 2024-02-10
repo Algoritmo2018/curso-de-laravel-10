@@ -24,11 +24,11 @@ class ReplySupportService
     public function createNew(CreateReplyDTO $dto): stdClass
     {
 
-        $support = $this->repository->createNew($dto);
+        $reply = $this->repository->createNew($dto);
 
-        SupportReplied::dispatch($support);
+        SupportReplied::dispatch($reply);
 
-        return $support;
+        return $reply;
     }
 
 

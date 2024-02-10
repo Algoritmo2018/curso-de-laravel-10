@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,15 @@ class ReplySupport extends Model
         'support_id',
         'content',
     ];
+
+    protected $with = ['user'];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->latest();
+        });
+    }
 
     public function createdAt(): Attribute{
         return Attribute::make(
