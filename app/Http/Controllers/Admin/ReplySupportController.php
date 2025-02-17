@@ -15,7 +15,9 @@ class ReplySupportController extends Controller
         protected SupportService $supportService,
         protected ReplySupportService $replyService,
     ) {
-    }
+        $this->middleware(['permission:view replies'], ['only' => ['index']]);
+        $this->middleware(['permission:create replies'], ['only' => ['store']]); 
+        $this->middleware(['permission:delete replies'], ['only' => ['destroy']]);}
     public function index(string $id)
     {
 
@@ -26,18 +28,21 @@ class ReplySupportController extends Controller
         return view('admin.supports.replies.replies', compact('support', 'replies'));
     }
 
-    public function store(StoreReplySupportRequest $request){
+    public function store(StoreReplySupportRequest $request)
+    {
+
         $this->replyService->createNew(
             CreateReplyDTO::makeFromRequest($request)
         );
 
         return redirect()->route('replies.index', $request->support_id)
-        ->with('message', 'Cadastrado com sucesso!');
+            ->with('message', 'Cadastrado com sucesso!');
     }
 
-    public function destroy(string $supportId,string $id){
+    public function destroy(string $supportId, string $id)
+    {
         $this->replyService->delete($id);
         return redirect()->route('replies.index', $supportId)
-        ->with('message', 'deletado com sucesso!');
+            ->with('message', 'deletado com sucesso!');
     }
 }

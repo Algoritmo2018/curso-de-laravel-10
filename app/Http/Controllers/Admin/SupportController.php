@@ -16,18 +16,24 @@ class SupportController extends Controller
 
     public function __construct(
         protected SupportService $service
-    ) {}
+    ) {
+        $this->middleware(['permission:view supports'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create supports'], ['only' => ['create']]);
+        $this->middleware(['permission:edit supports'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete supports'], ['only' => ['destroy']]);
+    }
 
 
     public function index(Request $request)
     {
+ 
         $supports = $this->service->paginate(
             page: $request->get('page', 1),
             totalPerPage: $request->get('per_page', 4),
             filter: $request->filter,
         );
 
-$filters = ['filter' => $request->get('filter', '')];
+        $filters = ['filter' => $request->get('filter', '')];
 
         return view('admin/supports/index', compact('supports', 'filters'));
     }
@@ -58,7 +64,7 @@ $filters = ['filter' => $request->get('filter', '')];
 
 
         return redirect()->route('supports.index')
-        ->with('message', 'Cadastrado com sucesso!');
+            ->with('message', 'Cadastrado com sucesso!');
     }
 
     public function edit(string $id)
@@ -83,17 +89,16 @@ $filters = ['filter' => $request->get('filter', '')];
         }
 
         return redirect()->route('supports.index')
-        ->with('message', 'Atualizado com sucesso!');
+            ->with('message', 'Atualizado com sucesso!');
     }
 
     public function destroy(string $id)
     {
-      $this->service->delete($id);
+        $this->service->delete($id);
 
 
 
         return redirect()->route('supports.index')
-        ->with('message', 'Deletado com sucesso!');
-
+            ->with('message', 'Deletado com sucesso!');
     }
 }

@@ -13,8 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('supports', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
+           $table->id();
+            $table->foreignId('user_id')->index();
             $table->string('subject');
             $table->enum('status', array_column(SupportStatus::cases(), 'name'));
             $table->text('body');

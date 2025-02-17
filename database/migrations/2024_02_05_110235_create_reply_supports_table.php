@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('replies_support', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
-            $table->uuid('support_id')->index();
+           $table->id();
+            $table->foreignId('user_id')->index();
+            $table->foreignId('support_id')->index();
             $table->text('content');
             $table->timestamps();
 

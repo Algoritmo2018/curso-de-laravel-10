@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Foundation\Configuration\Middleware;
 /*
 |--------------------------------------------------------------------------
 | Create The Application

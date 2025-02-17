@@ -19,8 +19,7 @@ class SupportRepliedMail extends Mailable implements ShouldQueue
      */
     public function __construct(
         protected stdClass $reply,
-    )
-    {  }
+    ) {}
 
     /**
      * Get the message envelope.

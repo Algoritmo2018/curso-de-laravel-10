@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\{SupportEloquentORM};
 use App\Repositories\Eloquent\ReplySupportRepository;
 use App\Repositories\Contracts\{ReplyRepositoryInterface, SupportRepositoryInterface};
-
+use Illuminate\Support\Facades\Gate;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +33,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Implicitly grant "Super Admin" role all permissions
+        // This works in the app by using gate-related functions like auth()->user->can() and @can()
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('superadmin') ? true : null;
+        });
         Support::observe(SupportObserver::class);
+           
     }
+    
 }
