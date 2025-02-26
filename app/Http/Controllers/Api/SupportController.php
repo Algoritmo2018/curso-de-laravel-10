@@ -17,22 +17,25 @@ class SupportController extends Controller
 
     public function __construct(
         protected SupportService $service,
-    ) {
+    )  {
+        $this->middleware(['permission:view supports api'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create supports api'], ['only' => ['store']]);
+        $this->middleware(['permission:edit supports api'], ['only' => [ 'update']]);
+        $this->middleware(['permission:delete supports api'], ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-    //$supports = Support::paginate();
-$supports = $this->service->paginate(
-    page: $request->get('page', 1),
+        //$supports = Support::paginate();
+        $supports = $this->service->paginate(
+            page: $request->get('page', 1),
             totalPerPage: $request->get('per_page', 1),
             filter: $request->filter,
-);
+        );
 
-
-  return ApiAdapter::toJson($supports);
+        return ApiAdapter::toJson($supports);
     }
 
     /**
@@ -45,8 +48,8 @@ $supports = $this->service->paginate(
         );
 
         return (new SupportResource($support))
-                    ->response()
-                    ->setStatusCode(Response::HTTP_CREATED);
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**

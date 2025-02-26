@@ -14,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasRoles, HasApiTokens, HasFactory, Notifiable;
-
+    public $guard_name = ['api','web'];
     /**
      * The attributes that are mass assignable.
      *

@@ -11,51 +11,50 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function auth(AuthRequest $request){
+   public function auth(AuthRequest $request)
+   {
 
 
-$user = User::where('email', $request->email)->first();
-if(!$user || !Hash::check($request->password, $user->password))
-{
-throw ValidationException::withMessages(
-    [
-        'email' => ['The provided credebtials are incorrect']
-    ]);
-}
+      $user = User::where('email', $request->email)->first();
+      if (!$user || !Hash::check($request->password, $user->password)) {
+         throw ValidationException::withMessages(
+            [
+               'email' => ['The provided credebtials are incorrect']
+            ]
+         );
+      }
 
-// Logout others devices
-//if($request->has('Logout_others_devices'))
-$user->tokens()->delete();
+      // Logout others devices
+      //if($request->has('Logout_others_devices'))
+      $user->tokens()->delete();
 
- $token = $user->createToken($request->device_name)->plainTextToken;
+      $token = $user->createToken($request->device_name)->plainTextToken;
 
- return response()->json([
-    'token' => $token,
- ]);
+      return response()->json([
+         'token' => $token,
+      ]);
+   }
 
-    }
-
-    public function logout(Request $request){
-
-
-        $request->user()->tokens()->delete();
+   public function logout(Request $request)
+   {
 
 
-         return response()->json([
-            'message' => 'success',
-         ]);
-
-            }
-
-            public function me(Request $request){
+      $request->user()->tokens()->delete();
 
 
-               $user = $request->user();
+      return response()->json([
+         'message' => 'success',
+      ]);
+   }
+
+   public function me(Request $request)
+   {
+
+      $user = $request->user();
 
 
-                 return response()->json([
-                    'me' => $user,
-                 ]);
-
-                    }
+      return response()->json([
+         'me' => $user,
+      ]);
+   }
 }

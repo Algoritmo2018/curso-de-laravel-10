@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\ReplySupportApiController;
-
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\UserController;
 
 Route::post('/login', [AuthController::class, 'auth']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -12,6 +14,9 @@ Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 
 Route::middleware(['auth:sanctum'])->group(function (){
+    Route::apiResource('/permission', PermissionController::class);
+    Route::apiResource('/role', RoleController::class);
+    Route::put('/v1/users/update/profile/{user}', [UserController::class, 'updateUserProfile']);
 
     Route::get('/replies/{support_id}', [ReplySupportApiController::class, 'getRepliesFromSupport']);
     Route::post('/replies/{support_id}', [ReplySupportApiController::class, 'createNewReply']);

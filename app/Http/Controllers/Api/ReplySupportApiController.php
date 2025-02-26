@@ -17,6 +17,9 @@ class ReplySupportApiController extends Controller
         protected SupportService $supportService,
         protected ReplySupportService $replyService,
     ) {
+        $this->middleware(['permission:view replies api'], ['only' => ['getRepliesFromSupport']]);
+        $this->middleware(['permission:create replies api'], ['only' => ['createNewReply']]);
+        $this->middleware(['permission:delete replies api'], ['only' => ['destroy']]);
     }
     public function getRepliesFromSupport(string $supportId)
     {
@@ -30,19 +33,19 @@ class ReplySupportApiController extends Controller
 
     public function createNewReply(StoreReplySupportRequest $request)
     {
-       $reply = $this->replyService->createNew(
+        $reply = $this->replyService->createNew(
             CreateReplyDTO::makeFromRequest($request)
         );
 
         return (new ReplySupportResource($reply))
-                    ->response()
-                    ->setStatusCode(Response::HTTP_CREATED);
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function destroy(string $id){
+    public function destroy(string $id)
+    {
         $this->replyService->delete($id);
 
-return response()->json([], Response::HTTP_NO_CONTENT);
-
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }

@@ -19,8 +19,11 @@ class DadosPreDefinidosSeeder extends Seeder
             'email' => 'admin@gmail.com',
         ]);
         $role = Role::create(['name' => 'superadmin']);
-        $user->syncRoles($role);
+        $roleApi = Role::create(['name' => 'superadmin', 'guard_name' => 'api']);
+        $user->syncRoles($role->name);
+        $user->syncRoles($roleApi->name);
         $roleNormal = Role::create(['name' => 'normal']);
+        Role::create(['name' => 'normal api', 'guard_name' => 'api']);
         $permissions = [
             'view supports',
             'create supports',
@@ -41,9 +44,31 @@ class DadosPreDefinidosSeeder extends Seeder
             'view users',
             'edit users',
         ];
+        $permissionsApi = [
+            'view supports api',
+            'create supports api',
+            'edit supports api',
+            'delete supports api',
+            'view replies api',
+            'create replies api',
+            'edit replies api',
+            'delete replies api',
+            'view permissions api',
+            'create permissions api',
+            'edit permissions api',
+            'delete permissions api',
+            'view roles api',
+            'create roles api',
+            'edit roles api',
+            'delete roles api',
+        ];
 
         foreach ($permissions as $permission) {
-            $SavePermission = Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission]);
+        }
+
+        foreach ($permissionsApi as $permissionApi) {
+            Permission::create(['name' => $permissionApi, 'guard_name' => 'api']);
         }
         //Permissões do bibliotecario
         $PermissionsNormal = [
