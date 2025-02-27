@@ -5,9 +5,9 @@ namespace App\Providers;
 use App\Models\Support;
 use App\Observers\SupportObserver;
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\{SupportEloquentORM};
+use App\Repositories\{PermissionEloquentORM, SupportEloquentORM, UserEloquentORM};
 use App\Repositories\Eloquent\ReplySupportRepository;
-use App\Repositories\Contracts\{ReplyRepositoryInterface, SupportRepositoryInterface};
+use App\Repositories\Contracts\{PermissionRepositoryInterface, ReplyRepositoryInterface, SupportRepositoryInterface, UserRepositoryInterface};
 use Illuminate\Support\Facades\Gate;
 
 
@@ -18,13 +18,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(SupportRepositoryInterface::class,
-        SupportEloquentORM::class
+        $this->app->bind(
+            SupportRepositoryInterface::class,
+            SupportEloquentORM::class
+        );
+        $this->app->bind(
+            PermissionRepositoryInterface::class,
+            PermissionEloquentORM::class
         );
 
         $this->app->bind(
             ReplyRepositoryInterface::class,
             ReplySupportRepository::class
+        );
+        $this->app->bind(
+            UserRepositoryInterface::class,
+            UserEloquentORM::class
         );
     }
 
@@ -39,7 +48,5 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('superadmin') ? true : null;
         });
         Support::observe(SupportObserver::class);
-           
     }
-    
 }
