@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Requests\Api\Role;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|unique:roles|min:3',
+            'guard_name' => 'required|in:api,web',
+            'permission' => 'exists:permissions,id|array',
+            'permission.*' => 'integer',
+        ];
+    }
+}

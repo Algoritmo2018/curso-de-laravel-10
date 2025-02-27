@@ -5,9 +5,9 @@ namespace App\Providers;
 use App\Models\Support;
 use App\Observers\SupportObserver;
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\{PermissionEloquentORM, SupportEloquentORM, UserEloquentORM};
+use App\Repositories\{PermissionEloquentORM, RoleEloquentORM, SupportEloquentORM, UserEloquentORM};
 use App\Repositories\Eloquent\ReplySupportRepository;
-use App\Repositories\Contracts\{PermissionRepositoryInterface, ReplyRepositoryInterface, SupportRepositoryInterface, UserRepositoryInterface};
+use App\Repositories\Contracts\{PermissionRepositoryInterface, ReplyRepositoryInterface, RoleRepositoryInterface, SupportRepositoryInterface, UserRepositoryInterface};
 use Illuminate\Support\Facades\Gate;
 
 
@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SupportRepositoryInterface::class,
             SupportEloquentORM::class
+        );
+        $this->app->bind(
+            RoleRepositoryInterface::class,
+            RoleEloquentORM::class
         );
         $this->app->bind(
             PermissionRepositoryInterface::class,

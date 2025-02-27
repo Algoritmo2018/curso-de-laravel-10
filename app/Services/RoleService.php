@@ -2,21 +2,15 @@
 
 namespace App\Services;
 
-use stdClass;
-use App\DTO\Supports\CreateSupportDTO;
-use App\DTO\Supports\UpdateSupportDTO;
-use App\Enums\SupportStatus;
+use App\DTO\Roles\CreateRoleDTO;
+use App\DTO\Roles\UpdateRoleDTO;
 use App\Repositories\Contracts\PaginationInterface;
-use App\Repositories\Contracts\SupportRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 
-use Illuminate\Support\Facades\Gate;
-
-class SupportService
+class RoleService
 {
-
-
     public function __construct(
-        protected SupportRepositoryInterface $repository
+        protected RoleRepositoryInterface $repository
     ) {}
 
     public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface
@@ -32,27 +26,23 @@ class SupportService
         return $this->repository->getAll($filter);
     }
 
-    public function findOne(string $id): stdClass|null
+    public function findOne(string $id)
     {
         return $this->repository->findOne($id);
     }
 
-    public function new(CreateSupportDTO $dto): stdClass
+    public function new(CreateRoleDTO $dto)
     {
         return $this->repository->new($dto);
     }
 
-    public function update(UpdateSupportDTO $dto): stdClass|null
+    public function update(UpdateRoleDTO $dto)
     {
         return $this->repository->update($dto);
     }
 
-    public function delete(string $id): void
+    public function delete(string $id)
     {
         $this->repository->delete($id);
-    }
-    public function updateStatus(string $id, SupportStatus $status): void
-    {
-        $this->repository->updateStatus($id, $status);
     }
 }

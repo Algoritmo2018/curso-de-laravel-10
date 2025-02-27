@@ -11,10 +11,6 @@ use App\Http\Requests\Permission\UpdateRequest;
 use App\Http\Resources\PermissionResource;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 
 class PermissionController extends Controller
 
@@ -57,8 +53,7 @@ class PermissionController extends Controller
     // This method will delete a permission in DB
     public function destroy($id)
     {
-        $permission = $this->permissionService->delete($id);
-
+        $this->permissionService->delete($id);
         return response()->json(['success' => true, 'message' => 'Permissão deletada com sucesso'], 204);
     }
 }

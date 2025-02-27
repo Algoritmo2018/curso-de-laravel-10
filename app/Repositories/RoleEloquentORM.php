@@ -1,109 +1,89 @@
 <?php
 
 namespace App\Repositories;
-
-use stdClass;
-use App\Models\Support;
-use App\Enums\SupportStatus;
-use Illuminate\Support\Facades\Gate;
-use App\DTO\Supports\CreateSupportDTO;
-use App\DTO\Supports\UpdateSupportDTO;
+  
+use App\DTO\Roles\CreateRoleDTO;
+use App\DTO\Roles\UpdateRoleDTO;
 use App\Repositories\Contracts\PaginationInterface;
-use App\Repositories\Contracts\SupportRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
+use Spatie\Permission\Models\Role;
 
-class SupportEloquentORM implements SupportRepositoryInterface
+class RoleEloquentORM implements RoleRepositoryInterface
 {
 
     public function __construct(
-        protected Support $model
-    ) {
-    }
+        protected Role $model
+    ) {}
 
     public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface
     {
         $result = $this->model
-            // ->with(['replies' => function ($query) {
-            //         $query->limit(4);
-            //         $query->latest();
-            // }])
-            ->with('replies.user')
             ->where(function ($query) use ($filter) {
                 if ($filter) {
-                    $query->where('subject', $filter);
-                    $query->orWhere('body', 'like', "%{$filter}%");
+                    $query->where('name', 'like', "%{$filter}%");
                 }
-            })
+            })->with('permissions')
             ->paginate($totalPerPage, ['*'], 'page', $page);
-
-
 
         return new PaginationPresenter($result);
     }
 
     public function getAll(string $filter = null): array
     {
-
-
         return $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
-                    $query->where('subject', $filter);
-                    $query->orWhere('body', 'like', "%{$filter}%");
+                    $query->where('name', 'like', "%{$filter}%");
                 }
-            })
+            })->with('permissions')
             ->get()
             ->toArray();
     }
-    public function findOne(string $id): stdClass|null
+    public function findOne(string $id)
     {
-        $support = $this->model->with('user')
+        $role = $this->model->with('user')
             ->find($id);
-        if (!$support) {
+        if (!$role) {
             return null;
         }
-        return (object) $support->toArray();
+        return (object) $role->toArray();
     }
-    public function delete(string $id): void
+    public function delete(string $id)
     {
-        $support =  $this->model->findOrFail($id);
-
-        if(Gate::denies('owner', $support->user->id)){
-            abort(403, 'Not Authorized');
-        }
-       $support->delete();
+        $role =  $this->model->find($id);
+        $role->delete();
     }
-    public function new(CreateSupportDTO $dto): stdClass
+    public function new(CreateRoleDTO $dto)
     {
-        $support = $this->model->create(
-            (array) $dto
+        $dto = (array) $dto;
+        $role = $this->model->create(
+            $dto
         );
-        return (object) $support->toArray();
+
+        if (!empty($dto['permissions'])) {
+            foreach ($dto['permissions'] as  $id) {
+                $role->givePermissionTo($id);
+            }
+        }
+
+        return  $role;
     }
 
-    public function update(UpdateSupportDTO $dto): stdClass|null
+    public function update(UpdateRoleDTO $dto)
     {
-        if (!$support = $this->model->find($dto->id)) {
+        $dto = (array) $dto;
+        if (!$role = $this->model->find($dto['id'])) {
             return null;
         }
 
-        if(Gate::denies('owner', $support->user->id)){
-            abort(403, 'Not Authorized');
+        if ($dto['name']) {
+            $role->name = $dto['name'];
+            $role->save();
         }
 
-        $support->update(
-            (array) $dto
-        );
-
-        return (object) $support->toArray();
-    }
-
-    public function updateStatus(string $id, SupportStatus $status): void{
-
-        $this->model
-        ->where('id', $id)
-        ->update([
-            'status' => $status->name,
-        ]);
+        if (!empty($dto['permission'])) {
+            $role->syncPermissions($dto['permission']);
+        }
+        return $role;
     }
 }
-
