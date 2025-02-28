@@ -23,8 +23,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'unique:roles,name,',
-            'permission' => 'exists:permissions,id|array',
-            'permission.*' => 'integer',
+            'permissions' => 'array', 
         ];
     }
 }

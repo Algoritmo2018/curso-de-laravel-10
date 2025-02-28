@@ -9,8 +9,8 @@ use App\DTO\Permissions\{
 
 interface PermissionRepositoryInterface
 {
-    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface;
-    public function getAll(string $filter = null): array;
+    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null, string $guard_name = null): PaginationInterface;
+    public function getAll(string $filter = null,string $guard_name = null): array;
     public function findOne(string $id);
     public function delete(string $id);
     public function new(CreatePermissionDTO $dto);

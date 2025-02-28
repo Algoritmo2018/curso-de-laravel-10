@@ -18,25 +18,36 @@ class PermissionEloquentORM implements PermissionRepositoryInterface
         protected Permission $model
     ) {}
 
-    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface
+    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null, string $guard_name = null): PaginationInterface
     {
         $result = $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
                     $query->where('name', $filter);
                 }
+            })->where(function ($query) use ($guard_name) {
+                if ($guard_name) {
+                    $query->where('guard_name', $guard_name);
+                }
             })
+            ->orderBy('id', 'desc')
             ->paginate($totalPerPage, ['*'], 'page', $page);
 
         return new PaginationPresenter($result);
     }
 
-    public function getAll(string $filter = null): array
+    public function getAll(string $filter = null, string $guard_name = null): array
     {
+         
         return $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
                     $query->where('name', $filter);
+                }
+            })
+            ->where(function ($query) use ($guard_name) {
+                if ($guard_name) {
+                    $query->where('guard_name', $guard_name);
                 }
             })
             ->get()
@@ -54,8 +65,8 @@ class PermissionEloquentORM implements PermissionRepositoryInterface
     public function delete(string $id)
     {
         $permission =  $this->model->find($id);
-
         $permission->delete();
+        return $permission;
     }
     public function new(CreatePermissionDTO $dto)
     {
@@ -70,12 +81,11 @@ class PermissionEloquentORM implements PermissionRepositoryInterface
         if (!$permission = $this->model->find($dto->id)) {
             return null;
         }
-  
+
         $permission->update(
             (array) $dto
         );
 
         return  $permission;
-    }   }
-
-    
+    }
+}

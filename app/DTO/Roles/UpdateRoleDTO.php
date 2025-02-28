@@ -11,7 +11,7 @@ class UpdateRoleDTO
     public function __construct(
         public string $id,
         public string $name = "",
-        public array $permission = [],
+        public array $permissions = [],
     ) {}
 
     public static function makeFromRequest(UpdateRequest $request, string $id = null): self
@@ -19,7 +19,7 @@ class UpdateRoleDTO
         return new self(
             $id ?? $request->id,
             $request->name ?? "",
-            $request->permission ?? []
+            $request->permissions ?? []
         );
     }
 }

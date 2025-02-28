@@ -35,7 +35,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::orderBy('name', 'ASC')->get();
+        $roles = Role::orderBy('name', 'ASC')->where('guard_name', 'web')->get();
         return view('users.create', [
             'roles' => $roles
         ]);

@@ -13,12 +13,13 @@ class RoleService
         protected RoleRepositoryInterface $repository
     ) {}
 
-    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface
+    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null, string $guard_name = null): PaginationInterface
     {
         return $this->repository->paginate(
             page: $page,
             totalPerPage: $totalPerPage,
             filter: $filter,
+            guard_name: $guard_name,
         );
     }
     public function getAll(string $filter = null): array

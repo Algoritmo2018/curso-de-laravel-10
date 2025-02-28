@@ -15,14 +15,20 @@ class RoleEloquentORM implements RoleRepositoryInterface
         protected Role $model
     ) {}
 
-    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface
+    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null, string $guard_name = null): PaginationInterface
     {
         $result = $this->model
-            ->where(function ($query) use ($filter) {
-                if ($filter) {
-                    $query->where('name', 'like', "%{$filter}%");
-                }
-            })->with('permissions')
+        ->where(function ($query) use ($filter) {
+            if ($filter) {
+                $query->where('name', 'like', "%{$filter}%");
+            }
+        })
+        ->where(function ($query) use ($guard_name) {
+            if ($guard_name) {
+                $query->where('guard_name', $guard_name);
+            }
+        })->with('permissions')
+        ->orderBy('id','desc')
             ->paginate($totalPerPage, ['*'], 'page', $page);
 
         return new PaginationPresenter($result);
@@ -41,7 +47,7 @@ class RoleEloquentORM implements RoleRepositoryInterface
     }
     public function findOne(string $id)
     {
-        $role = $this->model->with('user')
+        $role = $this->model->with('users','permissions')
             ->find($id);
         if (!$role) {
             return null;
@@ -61,8 +67,8 @@ class RoleEloquentORM implements RoleRepositoryInterface
         );
 
         if (!empty($dto['permissions'])) {
-            foreach ($dto['permissions'] as  $id) {
-                $role->givePermissionTo($id);
+            foreach ($dto['permissions'] as  $id) { 
+                $role->givePermissionTo((int) $id);
             }
         }
 
@@ -79,10 +85,9 @@ class RoleEloquentORM implements RoleRepositoryInterface
         if ($dto['name']) {
             $role->name = $dto['name'];
             $role->save();
-        }
-
-        if (!empty($dto['permission'])) {
-            $role->syncPermissions($dto['permission']);
+        } 
+        if (!empty($dto['permissions'])) {
+            $role->syncPermissions($dto['permissions']);
         }
         return $role;
     }

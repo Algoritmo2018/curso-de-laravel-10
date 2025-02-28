@@ -25,12 +25,15 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    @if ($roles->isNotEmpty())
-                        @foreach ($roles as $role)
+                    @if ($roles)
+                        @foreach ($roles->items() as $role)
                             <tr>
                                 <td class="px-6 py-3 text-left">{{ $role->id }}</td>
                                 <td class="px-6 py-3 text-left">{{ $role->name }}</td>
-                                <td class="px-6 py-3 text-left">{{ $role->permissions->pluck('name')->implode(', ') }}
+                                <td class="px-6 py-3 text-left">@foreach ($role->permissions as $permission)
+                                    {{ $permission['name'].", " }}
+                                @endforeach</td>
+                              
                                 </td>
                                 <td class="px-6 py-3 text-left">
                                     {{ \Carbon\Carbon::parse($role->created_at)->format('d M, Y') }}</td>
@@ -50,9 +53,7 @@
                 </tbody>
             </table>
 
-            <div class="my-3">
-                {{ $roles->links() }}</div>
-        </div>
+           
     </div>
     <x-slot name="script">
         <script type="text/javascript">

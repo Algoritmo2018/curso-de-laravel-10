@@ -9,7 +9,7 @@ use App\DTO\Roles\{
 
 interface RoleRepositoryInterface
 {
-    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null): PaginationInterface;
+    public function paginate(int $page = 1, int $totalPerPage = 15, string $filter = null, string $guard_name = null): PaginationInterface;
     public function getAll(string $filter = null);
     public function findOne(string $id);
     public function delete(string $id);

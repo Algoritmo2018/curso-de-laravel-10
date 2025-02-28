@@ -25,8 +25,8 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    @if ($permissions->isNotEmpty())
-                        @foreach ($permissions as $permission)
+                    @if ($permissions)
+                        @foreach ($permissions->items() as $permission)
                             <tr>
                                 <td class="px-6 py-3 text-left">{{ $permission->id }}</td>
                                 <td class="px-6 py-3 text-left">{{ $permission->name }}</td>
@@ -51,8 +51,8 @@
 
                 </tbody>
             </table>
-            <div class="my-3">
-                {{ $permissions->links() }}</div>
+            {{-- <div class="my-3">
+                {{ $permissions->currentPage() }}</div> --}}
         </div>
     </div>
     <x-slot name="script">

@@ -30,6 +30,7 @@ class PermissionController extends Controller
             page: $request->get('page', 1),
             totalPerPage: $request->get('per_page', 50),
             filter: $request->filter,
+            guard_name: $request->get('guad_name','api')
         );
         return ApiAdapter::toJson($permissions);
     }
