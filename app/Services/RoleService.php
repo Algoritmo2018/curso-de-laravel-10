@@ -22,9 +22,9 @@ class RoleService
             guard_name: $guard_name,
         );
     }
-    public function getAll(string $filter = null): array
+    public function getAll(string $filter = null, string $guard_name = null)
     {
-        return $this->repository->getAll($filter);
+        return $this->repository->getAll($filter, $guard_name);
     }
 
     public function findOne(string $id)

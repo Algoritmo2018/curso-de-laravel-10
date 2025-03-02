@@ -26,22 +26,15 @@
                                 @error('name')
                                     <p class="text-sm text-red-600 space-y-1">{{ $message }}</p>
                                 @enderror
+                                @error('roles')
+                                <p class="text-sm text-red-600 space-y-1">{{ $message }}</p>
+                            @enderror
                             </div>
-                            <div>
-                                <label for="" class="text-lg font-medium">Email</label>
-                                <div class="my-3">
-                                    <input value="{{ old('email',$user->email) }}" name="email" placeholder="Enter email"
-                                        type="text"
-                                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full">
-                                    @error('email')
-                                        <p class="text-sm text-red-600 space-y-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
+                            <div> 
                             <div style="display: flexbox; flex-diretion:row;" class="mb-3">
                                 @if ($roles->isNotEmpty())
                                     @foreach ($roles as $role)
-                                      <input {{($hasRoles->contains($role->id)) ? 'checked' : ''}} type="checkbox" id="role-{{$role->id}}" class="rounded" name="role[]"
+                                      <input {{($hasRoles->contains($role->id)) ? 'checked' : ''}} type="checkbox" id="role-{{$role->id}}" class="rounded" name="roles[]"
                                                 value="{{ $role->name }}">
                                             <label for="role-{{$role->id}}">{{ $role->name }}</label>
 

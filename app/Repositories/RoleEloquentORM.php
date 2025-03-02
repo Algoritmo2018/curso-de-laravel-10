@@ -34,16 +34,19 @@ class RoleEloquentORM implements RoleRepositoryInterface
         return new PaginationPresenter($result);
     }
 
-    public function getAll(string $filter = null): array
+    public function getAll(string $filter = null,string $guard_name = null) 
     {
         return $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
                     $query->where('name', 'like', "%{$filter}%");
                 }
-            })->with('permissions')
-            ->get()
-            ->toArray();
+            })  ->where(function ($query) use ($guard_name) {
+                if ($guard_name) {
+                    $query->where('guard_name', $guard_name);
+                }
+            }) 
+            ->get();
     }
     public function findOne(string $id)
     {

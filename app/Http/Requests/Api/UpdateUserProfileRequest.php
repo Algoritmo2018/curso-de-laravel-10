@@ -22,8 +22,7 @@ class UpdateUserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'roles' => 'required|exists:roles,id|array',
-            'roles.*' => 'integer',
+            'roles' => 'required|array', 
         ];
     }
 }

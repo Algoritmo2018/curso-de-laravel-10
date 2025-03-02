@@ -4,10 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Users') }}
             </h2>
-            @can('create users')
-            <a href="{{ route('users.create') }}"
-                class="inline-flex mt-1 items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Create</a>
-        @endcan
         </div>
     </x-slot>
 
@@ -41,11 +37,10 @@
                                 <td class="px-6 py-3 text-center">
                                     @can('edit users')
                                         <a href="{{ route('users.edit', $user->id) }}"
-                                            class="bg-slate-700 text-sm rounded-md text-white px-3 py-2">Edit</a>
+                                            class="text-sm rounded-md text-white px-3 py-2">Edit</a>
                                         @endcan @can('delete users')
-                                         <a
-                                        href="javascript:void(0);" onclick="deleteUser({{ $user->id }})"
-                                        class="bg-red-600 text-sm rounded-md text-white px-3 py-2">Delete</a>
+                                        <a href="javascript:void(0);" onclick="deleteUser({{ $user->id }})"
+                                            class="bg-red-600 text-sm rounded-md text-white px-3 py-2">Delete</a>
                                     @endcan
                                 </td>
 
@@ -60,7 +55,7 @@
                 {{ $users->links() }}</div>
         </div>
     </div>
-     <x-slot name="script">
+    <x-slot name="script">
         <script type="text/javascript">
             function deleteUser(id) {
                 if (confirm("Are you want to delete?")) {
